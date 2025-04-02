@@ -44,28 +44,28 @@ export default function Footer() {
             <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/">
-                  <a className="text-gray-400 hover:text-white transition-colors">Home</a>
+                <Link href="/" className="text-gray-400 hover:text-white transition-colors">
+                  Home
                 </Link>
               </li>
               <li>
-                <Link href="/products">
-                  <a className="text-gray-400 hover:text-white transition-colors">Products</a>
+                <Link href="/products" className="text-gray-400 hover:text-white transition-colors">
+                  Products
                 </Link>
               </li>
               <li>
-                <Link href="/suppliers">
-                  <a className="text-gray-400 hover:text-white transition-colors">Suppliers</a>
+                <Link href="/suppliers" className="text-gray-400 hover:text-white transition-colors">
+                  Suppliers
                 </Link>
               </li>
               <li>
-                <Link href="/about">
-                  <a className="text-gray-400 hover:text-white transition-colors">About Us</a>
+                <Link href="/about" className="text-gray-400 hover:text-white transition-colors">
+                  About Us
                 </Link>
               </li>
               <li>
-                <Link href="/contact">
-                  <a className="text-gray-400 hover:text-white transition-colors">Contact</a>
+                <Link href="/contact" className="text-gray-400 hover:text-white transition-colors">
+                  Contact
                 </Link>
               </li>
             </ul>
@@ -75,28 +75,28 @@ export default function Footer() {
             <h3 className="text-lg font-semibold mb-4">Customer Service</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/profile">
-                  <a className="text-gray-400 hover:text-white transition-colors">My Account</a>
+                <Link href="/profile" className="text-gray-400 hover:text-white transition-colors">
+                  My Account
                 </Link>
               </li>
               <li>
-                <Link href="/profile/orders">
-                  <a className="text-gray-400 hover:text-white transition-colors">Order Tracking</a>
+                <Link href="/profile/orders" className="text-gray-400 hover:text-white transition-colors">
+                  Order Tracking
                 </Link>
               </li>
               <li>
-                <Link href="/shipping">
-                  <a className="text-gray-400 hover:text-white transition-colors">Shipping Policy</a>
+                <Link href="/shipping" className="text-gray-400 hover:text-white transition-colors">
+                  Shipping Policy
                 </Link>
               </li>
               <li>
-                <Link href="/returns">
-                  <a className="text-gray-400 hover:text-white transition-colors">Returns & Refunds</a>
+                <Link href="/returns" className="text-gray-400 hover:text-white transition-colors">
+                  Returns & Refunds
                 </Link>
               </li>
               <li>
-                <Link href="/faq">
-                  <a className="text-gray-400 hover:text-white transition-colors">FAQ</a>
+                <Link href="/faq" className="text-gray-400 hover:text-white transition-colors">
+                  FAQ
                 </Link>
               </li>
             </ul>
@@ -129,17 +129,17 @@ export default function Footer() {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-500 text-sm mb-4 md:mb-0">© {new Date().getFullYear()} WoodMarket. All rights reserved.</p>
             <div className="flex space-x-4">
-              <Link href="/privacy">
-                <a className="text-gray-500 hover:text-white text-sm transition-colors">Privacy Policy</a>
+              <Link href="/privacy" className="text-gray-500 hover:text-white text-sm transition-colors">
+                Privacy Policy
               </Link>
-              <Link href="/terms">
-                <a className="text-gray-500 hover:text-white text-sm transition-colors">Terms of Service</a>
+              <Link href="/terms" className="text-gray-500 hover:text-white text-sm transition-colors">
+                Terms of Service
               </Link>
-              <Link href="/shipping">
-                <a className="text-gray-500 hover:text-white text-sm transition-colors">Shipping Policy</a>
+              <Link href="/shipping" className="text-gray-500 hover:text-white text-sm transition-colors">
+                Shipping Policy
               </Link>
-              <Link href="/sitemap">
-                <a className="text-gray-500 hover:text-white text-sm transition-colors">Sitemap</a>
+              <Link href="/sitemap" className="text-gray-500 hover:text-white text-sm transition-colors">
+                Sitemap
               </Link>
             </div>
           </div>

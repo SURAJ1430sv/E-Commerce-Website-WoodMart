@@ -34,15 +34,16 @@ export default function CategoryCard({ category }: CategoryCardProps) {
   };
 
   return (
-    <Link href={`/products?category=${category.id}`}>
-      <a className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-        <div className="p-4 flex flex-col items-center">
-          <div className="bg-primary-light/10 rounded-full p-4 mb-3">
-            {getIconComponent(category.icon)}
-          </div>
-          <h3 className="font-medium text-center">{category.name}</h3>
+    <Link 
+      href={`/products?category=${category.id}`}
+      className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow block"
+    >
+      <div className="p-4 flex flex-col items-center">
+        <div className="bg-primary-light/10 rounded-full p-4 mb-3">
+          {getIconComponent(category.icon)}
         </div>
-      </a>
+        <h3 className="font-medium text-center">{category.name}</h3>
+      </div>
     </Link>
   );
 }

@@ -64,12 +64,12 @@ export default function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <Link href={`/products/${product.id}`}>
-      <a 
-        className="bg-white rounded-lg shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md block h-full product-card"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
+    <div 
+      className="bg-white rounded-lg shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md h-full product-card"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <Link href={`/products/${product.id}`} className="block">
         <div className="relative">
           <img 
             src={product.imageUrl}
@@ -90,8 +90,10 @@ export default function ProductCard({ product }: ProductCardProps) {
             </div>
           )}
         </div>
+      </Link>
 
-        <div className="p-4">
+      <div className="p-4">
+        <Link href={`/products/${product.id}`} className="block">
           <div className="flex justify-between items-start">
             <h3 className="font-semibold text-lg mb-1 text-gray-800 line-clamp-1">{product.name}</h3>
             <span className="text-primary-dark font-bold">{formatPrice(product.price)}</span>
@@ -107,29 +109,29 @@ export default function ProductCard({ product }: ProductCardProps) {
             </div>
             <span className="text-xs text-gray-500 ml-1">(24 reviews)</span>
           </div>
+        </Link>
 
-          <div className="flex space-x-2">
-            <Button 
-              className="flex-1 bg-primary text-white py-2 px-4 rounded-md hover:bg-primary-dark transition-colors"
-              onClick={handleAddToCart}
-              disabled={product.stockQuantity <= 0 || addToCartMutation.isPending}
-            >
-              {addToCartMutation.isPending ? (
-                <Loader2 className="h-4 w-4 animate-spin mr-1" />
-              ) : (
-                <ShoppingCart className="h-4 w-4 mr-1" />
-              )}
-              {product.stockQuantity <= 0 ? 'Out of Stock' : 'Add to Cart'}
-            </Button>
-            <Button 
-              variant="outline"
-              className="w-10 h-10 bg-gray-100 text-gray-600 rounded-md flex items-center justify-center hover:bg-gray-200 transition-colors"
-            >
-              <Heart className="h-4 w-4" />
-            </Button>
-          </div>
+        <div className="flex space-x-2">
+          <Button 
+            className="flex-1 bg-primary text-white py-2 px-4 rounded-md hover:bg-primary-dark transition-colors"
+            onClick={handleAddToCart}
+            disabled={product.stockQuantity <= 0 || addToCartMutation.isPending}
+          >
+            {addToCartMutation.isPending ? (
+              <Loader2 className="h-4 w-4 animate-spin mr-1" />
+            ) : (
+              <ShoppingCart className="h-4 w-4 mr-1" />
+            )}
+            {product.stockQuantity <= 0 ? 'Out of Stock' : 'Add to Cart'}
+          </Button>
+          <Button 
+            variant="outline"
+            className="w-10 h-10 bg-gray-100 text-gray-600 rounded-md flex items-center justify-center hover:bg-gray-200 transition-colors"
+          >
+            <Heart className="h-4 w-4" />
+          </Button>
         </div>
-      </a>
-    </Link>
+      </div>
+    </div>
   );
 }

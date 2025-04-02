@@ -30,11 +30,14 @@ export default function HeroBanner({
         <p className="text-white text-lg md:text-xl mb-6 max-w-2xl">
           {description}
         </p>
-        <Link href={buttonLink}>
-          <Button className="px-6 py-3 h-auto bg-amber-400 text-white rounded-md hover:bg-amber-500 transition-colors transform hover:-translate-y-1 duration-200">
+        <Button 
+          asChild
+          className="px-6 py-3 h-auto bg-amber-400 text-white rounded-md hover:bg-amber-500 transition-colors transform hover:-translate-y-1 duration-200"
+        >
+          <Link href={buttonLink}>
             {buttonText}
-          </Button>
-        </Link>
+          </Link>
+        </Button>
       </div>
     </div>
   );
