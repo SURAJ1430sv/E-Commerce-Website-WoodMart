@@ -12,7 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ShoppingCart, User, LogOut, Tree, Search, Menu, X } from "lucide-react";
+import { ShoppingCart, User, LogOut, Warehouse, Search, Menu, X } from "lucide-react";
 
 export default function Header() {
   const { user, logoutMutation } = useAuth();
@@ -48,7 +48,7 @@ export default function Header() {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
-              <Tree className="text-primary h-6 w-6 mr-2" />
+              <Warehouse className="text-primary h-6 w-6 mr-2" />
               <span className="text-primary font-bold text-xl">WoodMarket</span>
             </Link>
             <div className="hidden md:flex space-x-8 ml-10">

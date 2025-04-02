@@ -1,6 +1,6 @@
 import { Link } from "wouter";
 import { 
-  Tree, 
+  Warehouse, 
   MapPin, 
   Phone, 
   Mail, 
@@ -18,7 +18,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div>
             <div className="flex items-center mb-4">
-              <Tree className="text-amber-400 h-6 w-6 mr-2" />
+              <Warehouse className="text-amber-400 h-6 w-6 mr-2" />
               <span className="text-white font-bold text-xl">WoodMarket</span>
             </div>
             <p className="text-gray-400 mb-4">

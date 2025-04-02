@@ -35,7 +35,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Tree } from "lucide-react";
+import { Warehouse } from "lucide-react";
 
 // Login form schema
 const loginSchema = z.object({
@@ -103,7 +103,7 @@ export default function AuthPage() {
         <Card className="w-full shadow-lg">
           <CardHeader className="space-y-1">
             <div className="flex items-center justify-center mb-2">
-              <Tree className="h-8 w-8 text-primary" />
+              <Warehouse className="h-8 w-8 text-primary" />
             </div>
             <CardTitle className="text-2xl text-center">Welcome to WoodMarket</CardTitle>
             <CardDescription className="text-center">
