@@ -4,12 +4,18 @@ import {
   Category, InsertCategory,
   CartItem, InsertCartItem,
   Order, InsertOrder,
-  OrderItem, InsertOrderItem
+  OrderItem, InsertOrderItem,
+  users, products, categories, cartItems, orders, orderItems
 } from "@shared/schema";
 import session from "express-session";
 import createMemoryStore from "memorystore";
+import connectPg from "connect-pg-simple";
+import { db } from "./db";
+import { pool } from "./db";
+import { eq, and, like, desc, sql } from "drizzle-orm";
 
 const MemoryStore = createMemoryStore(session);
+const PostgresSessionStore = connectPg(session);
 
 // Extend the storage interface with all required CRUD methods
 export interface IStorage {
@@ -53,185 +59,194 @@ export interface IStorage {
   createOrderItem(orderItem: InsertOrderItem): Promise<OrderItem>;
   
   // Session store
-  sessionStore: session.SessionStore;
+  sessionStore: any;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<number, User>;
-  private categories: Map<number, Category>;
-  private products: Map<number, Product>;
-  private cartItems: Map<number, CartItem>;
-  private orders: Map<number, Order>;
-  private orderItems: Map<number, OrderItem>;
+export class DatabaseStorage implements IStorage {
+  sessionStore: any;
   
-  // Current IDs for auto-increment
-  private currentUserId: number;
-  private currentCategoryId: number;
-  private currentProductId: number;
-  private currentCartItemId: number;
-  private currentOrderId: number;
-  private currentOrderItemId: number;
-  
-  sessionStore: session.SessionStore;
-
   constructor() {
-    this.users = new Map();
-    this.categories = new Map();
-    this.products = new Map();
-    this.cartItems = new Map();
-    this.orders = new Map();
-    this.orderItems = new Map();
-    
-    this.currentUserId = 1;
-    this.currentCategoryId = 1;
-    this.currentProductId = 1;
-    this.currentCartItemId = 1;
-    this.currentOrderId = 1;
-    this.currentOrderItemId = 1;
-    
-    this.sessionStore = new MemoryStore({
-      checkPeriod: 86400000, // prune expired entries every 24h
+    this.sessionStore = new PostgresSessionStore({
+      pool,
+      createTableIfMissing: true
     });
     
-    // Initialize with some sample categories
+    // Initialize categories if needed
     this.initializeCategories();
   }
   
-  private initializeCategories() {
-    const categories = [
-      { name: "Marine Plywood", icon: "layer-group" },
-      { name: "Structural Plywood", icon: "home" },
-      { name: "Decorative Plywood", icon: "drafting-compass" },
-      { name: "Construction Plywood", icon: "tools" }
-    ];
-    
-    categories.forEach(cat => {
-      this.createCategory(cat);
-    });
+  private async initializeCategories() {
+    // Check if categories exist
+    const existingCategories = await db.select().from(categories);
+    if (existingCategories.length === 0) {
+      // Add default categories
+      const defaultCategories = [
+        { name: "Marine Plywood", icon: "warehouse" },
+        { name: "Structural Plywood", icon: "home" },
+        { name: "Decorative Plywood", icon: "layers" },
+        { name: "Construction Plywood", icon: "tools" }
+      ];
+      
+      for (const category of defaultCategories) {
+        await db.insert(categories).values(category);
+      }
+    }
   }
 
   // User methods
   async getUser(id: number): Promise<User | undefined> {
-    return this.users.get(id);
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user;
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username.toLowerCase() === username.toLowerCase(),
-    );
+    const [user] = await db
+      .select()
+      .from(users)
+      .where(eq(users.username, username));
+    return user;
   }
   
   async getUserByEmail(email: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.email.toLowerCase() === email.toLowerCase(),
-    );
+    const [user] = await db
+      .select()
+      .from(users)
+      .where(eq(users.email, email));
+    return user;
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const id = this.currentUserId++;
-    const createdAt = new Date();
-    const user: User = { ...insertUser, id, createdAt };
-    this.users.set(id, user);
+    const [user] = await db
+      .insert(users)
+      .values(insertUser)
+      .returning();
     return user;
   }
   
   async updateUser(id: number, userData: Partial<InsertUser>): Promise<User | undefined> {
-    const user = await this.getUser(id);
-    if (!user) return undefined;
-    
-    const updatedUser = { ...user, ...userData };
-    this.users.set(id, updatedUser);
+    const [updatedUser] = await db
+      .update(users)
+      .set(userData)
+      .where(eq(users.id, id))
+      .returning();
     return updatedUser;
   }
   
   // Category methods
   async getCategories(): Promise<Category[]> {
-    return Array.from(this.categories.values());
+    return db.select().from(categories);
   }
   
   async getCategory(id: number): Promise<Category | undefined> {
-    return this.categories.get(id);
+    const [category] = await db
+      .select()
+      .from(categories)
+      .where(eq(categories.id, id));
+    return category;
   }
   
   async getCategoryByName(name: string): Promise<Category | undefined> {
-    return Array.from(this.categories.values()).find(
-      (category) => category.name.toLowerCase() === name.toLowerCase(),
-    );
+    const [category] = await db
+      .select()
+      .from(categories)
+      .where(eq(categories.name, name));
+    return category;
   }
   
   async createCategory(insertCategory: InsertCategory): Promise<Category> {
-    const id = this.currentCategoryId++;
-    const category: Category = { ...insertCategory, id };
-    this.categories.set(id, category);
+    const [category] = await db
+      .insert(categories)
+      .values(insertCategory)
+      .returning();
     return category;
   }
   
   // Product methods
   async getProducts(filters?: {categoryId?: number, supplierId?: number, featured?: boolean}): Promise<Product[]> {
-    let products = Array.from(this.products.values());
+    let conditions = [];
     
     if (filters) {
       if (filters.categoryId !== undefined) {
-        products = products.filter(product => product.categoryId === filters.categoryId);
+        conditions.push(eq(products.categoryId, filters.categoryId));
       }
       
       if (filters.supplierId !== undefined) {
-        products = products.filter(product => product.supplierId === filters.supplierId);
+        conditions.push(eq(products.supplierId, filters.supplierId));
       }
       
       if (filters.featured !== undefined) {
-        products = products.filter(product => product.isFeatured === filters.featured);
+        conditions.push(eq(products.isFeatured, filters.featured));
       }
     }
     
-    return products;
+    if (conditions.length > 0) {
+      return db.select().from(products).where(and(...conditions));
+    }
+    
+    return db.select().from(products);
   }
   
   async getProduct(id: number): Promise<Product | undefined> {
-    return this.products.get(id);
+    const [product] = await db
+      .select()
+      .from(products)
+      .where(eq(products.id, id));
+    return product;
   }
   
   async createProduct(insertProduct: InsertProduct): Promise<Product> {
-    const id = this.currentProductId++;
-    const createdAt = new Date();
-    const product: Product = { ...insertProduct, id, createdAt };
-    this.products.set(id, product);
+    const [product] = await db
+      .insert(products)
+      .values(insertProduct)
+      .returning();
     return product;
   }
   
   async updateProduct(id: number, productData: Partial<InsertProduct>): Promise<Product | undefined> {
-    const product = await this.getProduct(id);
-    if (!product) return undefined;
-    
-    const updatedProduct = { ...product, ...productData };
-    this.products.set(id, updatedProduct);
+    const [updatedProduct] = await db
+      .update(products)
+      .set(productData)
+      .where(eq(products.id, id))
+      .returning();
     return updatedProduct;
   }
   
   async deleteProduct(id: number): Promise<boolean> {
-    return this.products.delete(id);
+    const result = await db
+      .delete(products)
+      .where(eq(products.id, id));
+    return result.rowCount !== null && result.rowCount > 0;
   }
   
   async searchProducts(query: string): Promise<Product[]> {
-    const lowercaseQuery = query.toLowerCase();
-    return Array.from(this.products.values()).filter(
-      (product) => 
-        product.name.toLowerCase().includes(lowercaseQuery) || 
-        product.description.toLowerCase().includes(lowercaseQuery)
-    );
+    // Using ILIKE for case-insensitive search
+    return db
+      .select()
+      .from(products)
+      .where(
+        sql`${products.name} ILIKE ${'%' + query + '%'} OR ${products.description} ILIKE ${'%' + query + '%'}`
+      );
   }
   
   // Cart methods
   async getCartItems(userId: number): Promise<CartItem[]> {
-    return Array.from(this.cartItems.values()).filter(
-      (item) => item.userId === userId
-    );
+    return db
+      .select()
+      .from(cartItems)
+      .where(eq(cartItems.userId, userId));
   }
   
   async getCartItem(userId: number, productId: number): Promise<CartItem | undefined> {
-    return Array.from(this.cartItems.values()).find(
-      (item) => item.userId === userId && item.productId === productId
-    );
+    const [cartItem] = await db
+      .select()
+      .from(cartItems)
+      .where(
+        and(
+          eq(cartItems.userId, userId),
+          eq(cartItems.productId, productId)
+        )
+      );
+    return cartItem;
   }
   
   async addCartItem(insertCartItem: InsertCartItem): Promise<CartItem> {
@@ -244,84 +259,97 @@ export class MemStorage implements IStorage {
     }
     
     // Add new item
-    const id = this.currentCartItemId++;
-    const addedAt = new Date();
-    const cartItem: CartItem = { ...insertCartItem, id, addedAt };
-    this.cartItems.set(id, cartItem);
+    const [cartItem] = await db
+      .insert(cartItems)
+      .values(insertCartItem)
+      .returning();
     return cartItem;
   }
   
   async updateCartItem(id: number, quantity: number): Promise<CartItem | undefined> {
-    const cartItem = this.cartItems.get(id);
-    if (!cartItem) return undefined;
-    
     // Remove item if quantity is 0
     if (quantity <= 0) {
-      this.cartItems.delete(id);
+      await db
+        .delete(cartItems)
+        .where(eq(cartItems.id, id));
       return undefined;
     }
     
-    const updatedItem = { ...cartItem, quantity };
-    this.cartItems.set(id, updatedItem);
+    const [updatedItem] = await db
+      .update(cartItems)
+      .set({ quantity })
+      .where(eq(cartItems.id, id))
+      .returning();
     return updatedItem;
   }
   
   async removeCartItem(id: number): Promise<boolean> {
-    return this.cartItems.delete(id);
+    const result = await db
+      .delete(cartItems)
+      .where(eq(cartItems.id, id));
+    return result.rowCount !== null && result.rowCount > 0;
   }
   
   async clearCart(userId: number): Promise<boolean> {
-    const items = await this.getCartItems(userId);
-    items.forEach(item => this.cartItems.delete(item.id));
+    await db
+      .delete(cartItems)
+      .where(eq(cartItems.userId, userId));
     return true;
   }
   
   // Order methods
   async getOrders(userId: number): Promise<Order[]> {
-    return Array.from(this.orders.values())
-      .filter(order => order.userId === userId)
-      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+    return db
+      .select()
+      .from(orders)
+      .where(eq(orders.userId, userId))
+      .orderBy(desc(orders.createdAt));
   }
   
   async getOrder(id: number): Promise<Order | undefined> {
-    return this.orders.get(id);
+    const [order] = await db
+      .select()
+      .from(orders)
+      .where(eq(orders.id, id));
+    return order;
   }
   
   async createOrder(insertOrder: InsertOrder): Promise<Order> {
-    const id = this.currentOrderId++;
-    const createdAt = new Date();
-    const updatedAt = new Date();
-    const order: Order = { ...insertOrder, id, createdAt, updatedAt };
-    this.orders.set(id, order);
+    const [order] = await db
+      .insert(orders)
+      .values(insertOrder)
+      .returning();
     return order;
   }
   
   async updateOrderStatus(id: number, status: 'pending' | 'paid' | 'shipped' | 'delivered' | 'cancelled'): Promise<Order | undefined> {
-    const order = this.orders.get(id);
-    if (!order) return undefined;
-    
-    const updatedOrder = { 
-      ...order, 
-      status, 
-      updatedAt: new Date() 
-    };
-    this.orders.set(id, updatedOrder);
+    const [updatedOrder] = await db
+      .update(orders)
+      .set({ 
+        status,
+        updatedAt: new Date()
+      })
+      .where(eq(orders.id, id))
+      .returning();
     return updatedOrder;
   }
   
   // Order item methods
   async getOrderItems(orderId: number): Promise<OrderItem[]> {
-    return Array.from(this.orderItems.values()).filter(
-      (item) => item.orderId === orderId
-    );
+    return db
+      .select()
+      .from(orderItems)
+      .where(eq(orderItems.orderId, orderId));
   }
   
   async createOrderItem(insertOrderItem: InsertOrderItem): Promise<OrderItem> {
-    const id = this.currentOrderItemId++;
-    const orderItem: OrderItem = { ...insertOrderItem, id };
-    this.orderItems.set(id, orderItem);
+    const [orderItem] = await db
+      .insert(orderItems)
+      .values(insertOrderItem)
+      .returning();
     return orderItem;
   }
 }
 
-export const storage = new MemStorage();
+// Export the database storage instance instead of memory storage
+export const storage = new DatabaseStorage();
