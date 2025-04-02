@@ -72,8 +72,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Remove confirm password before sending to server
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { confirmPassword, ...registerData } = data;
-      const res = await apiRequest("POST", "/api/register", registerData);
-      return await res.json();
+      
+      try {
+        const res = await apiRequest("POST", "/api/register", registerData);
+        
+        if (!res.ok) {
+          const errorData = await res.json();
+          console.error("Registration error:", errorData);
+          throw new Error(errorData.message || "Registration failed");
+        }
+        
+        return await res.json();
+      } catch (error) {
+        console.error("Registration error:", error);
+        throw error;
+      }
     },
     onSuccess: (user: Omit<SelectUser, "password">) => {
       queryClient.setQueryData(["/api/user"], user);
@@ -85,7 +98,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     onError: (error: Error) => {
       toast({
         title: "Registration failed",
-        description: error.message,
+        description: error.message || "Could not create account. Please check your information and try again.",
         variant: "destructive",
       });
     },
