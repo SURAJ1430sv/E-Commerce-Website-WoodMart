@@ -217,7 +217,7 @@ export class DatabaseStorage implements IStorage {
   }
   
   // Product methods
-  async getProducts(filters?: {categoryId?: number, supplierId?: number, featured?: boolean}): Promise<Product[]> {
+  async getProducts(filters?: {categoryId?: number, supplierId?: number, isFeatured?: boolean}): Promise<Product[]> {
     let conditions = [];
     
     if (filters) {
@@ -229,8 +229,8 @@ export class DatabaseStorage implements IStorage {
         conditions.push(eq(products.supplierId, filters.supplierId));
       }
       
-      if (filters.featured !== undefined) {
-        conditions.push(eq(products.isFeatured, filters.featured));
+      if (filters.isFeatured !== undefined) {
+        conditions.push(eq(products.isFeatured, filters.isFeatured));
       }
     }
     

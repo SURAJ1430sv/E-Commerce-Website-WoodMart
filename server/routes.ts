@@ -60,11 +60,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { categoryId, supplierId, featured } = req.query;
       
-      const filters: { categoryId?: number; supplierId?: number; featured?: boolean } = {};
+      const filters: { categoryId?: number; supplierId?: number; isFeatured?: boolean } = {};
       
       if (categoryId) filters.categoryId = parseInt(categoryId as string);
       if (supplierId) filters.supplierId = parseInt(supplierId as string);
-      if (featured === 'true') filters.featured = true;
+      if (featured === 'true') filters.isFeatured = true;
       
       const products = await storage.getProducts(Object.keys(filters).length > 0 ? filters : undefined);
       res.json(products);

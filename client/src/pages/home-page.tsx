@@ -75,7 +75,7 @@ export default function HomePage() {
   
   // Fetch featured products
   const { data: featuredProducts, isLoading: productsLoading } = useQuery<Product[]>({
-    queryKey: ["/api/products?featured=true"],
+    queryKey: ["/api/products", { featured: true }],
   });
   
   const isLoading = categoriesLoading || productsLoading;
@@ -112,8 +112,8 @@ export default function HomePage() {
       <div className="mb-10">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold text-gray-800">Featured Products</h2>
-          <Link href="/products">
-            <a className="text-secondary hover:text-secondary-dark font-medium">View All</a>
+          <Link href="/products" className="text-secondary hover:text-secondary-dark font-medium">
+            View All
           </Link>
         </div>
         
@@ -122,11 +122,20 @@ export default function HomePage() {
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {featuredProducts?.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
+          <>
+            {featuredProducts && featuredProducts.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {featuredProducts.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <p className="text-muted-foreground mb-4">No featured products available</p>
+                <p className="text-sm">Featured products will appear here once suppliers mark their products as featured.</p>
+              </div>
+            )}
+          </>
         )}
       </div>
       
