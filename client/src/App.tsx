@@ -12,6 +12,8 @@ import ProfilePage from "@/pages/profile-page";
 import SuppliersPage from "@/pages/suppliers-page";
 import AboutPage from "@/pages/about-page";
 import ContactPage from "@/pages/contact-page";
+import ForgotPasswordPage from "@/pages/forgot-password-page";
+import ResetPasswordPage from "@/pages/reset-password-page";
 import { ProtectedRoute } from "./lib/protected-route";
 import Header from "./components/layout/header";
 import Footer from "./components/layout/footer";
@@ -30,6 +32,8 @@ function Router() {
           <Route path="/suppliers" component={SuppliersPage} />
           <Route path="/about" component={AboutPage} />
           <Route path="/contact" component={ContactPage} />
+          <Route path="/forgot-password" component={ForgotPasswordPage} />
+          <Route path="/reset-password" component={ResetPasswordPage} />
           <ProtectedRoute path="/cart" component={CartPage} />
           <ProtectedRoute path="/profile" component={ProfilePage} />
           <Route component={NotFound} />

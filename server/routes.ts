@@ -3,12 +3,19 @@ import { createServer, type Server } from "http";
 import { setupAuth } from "./auth";
 import { storage } from "./storage";
 import { z } from "zod";
+import Stripe from "stripe";
 import {
   insertProductSchema,
   insertCartItemSchema,
   insertOrderSchema,
   insertOrderItemSchema
 } from "@shared/schema";
+
+// Initialize Stripe
+if (!process.env.STRIPE_SECRET_KEY) {
+  throw new Error('Missing Stripe secret key. Please add STRIPE_SECRET_KEY to your environment variables.');
+}
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 // Authentication middleware
 const isAuthenticated = (req: Request, res: Response, next: Function) => {
@@ -286,6 +293,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(204).send();
     } catch (error) {
       res.status(500).json({ message: "Error clearing cart" });
+    }
+  });
+
+  // ======== Payment Routes ========
+  // Create a payment intent for Stripe checkout
+  app.post("/api/create-payment-intent", isAuthenticated, async (req, res) => {
+    try {
+      const { amount } = req.body;
+
+      if (!amount || typeof amount !== 'number' || amount <= 0) {
+        return res.status(400).json({ message: "Invalid amount" });
+      }
+
+      // Create a PaymentIntent with the order amount and currency
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: Math.round(amount + (amount * 0.1)), // Adding 10% tax
+        currency: "usd",
+        automatic_payment_methods: {
+          enabled: true,
+        },
+        metadata: {
+          userId: req.user!.id.toString(),
+        },
+      });
+
+      res.json({
+        clientSecret: paymentIntent.client_secret,
+      });
+    } catch (error: any) {
+      console.error('Error creating payment intent:', error);
+      res.status(500).json({ 
+        message: "Error creating payment intent",
+        error: error.message 
+      });
     }
   });
 

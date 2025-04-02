@@ -16,6 +16,8 @@ type AuthContextType = {
   loginMutation: UseMutationResult<Omit<SelectUser, "password">, Error, LoginData>;
   logoutMutation: UseMutationResult<void, Error, void>;
   registerMutation: UseMutationResult<Omit<SelectUser, "password">, Error, RegisterData>;
+  forgotPasswordMutation: UseMutationResult<{message: string, resetToken?: string}, Error, ForgotPasswordData>;
+  resetPasswordMutation: UseMutationResult<{message: string}, Error, ResetPasswordData>;
 };
 
 type LoginData = {
@@ -32,6 +34,16 @@ const registrationSchema = insertUserSchema.extend({
 });
 
 type RegisterData = z.infer<typeof registrationSchema>;
+
+type ForgotPasswordData = {
+  email: string;
+};
+
+type ResetPasswordData = {
+  token: string;
+  password: string;
+  confirmPassword: string;
+};
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 
@@ -123,6 +135,55 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
     },
   });
+  
+  const forgotPasswordMutation = useMutation({
+    mutationFn: async (data: ForgotPasswordData) => {
+      const res = await apiRequest("POST", "/api/forgot-password", data);
+      return await res.json();
+    },
+    onSuccess: (data) => {
+      toast({
+        title: "Reset Email Sent",
+        description: data.message,
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Password Reset Failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+  
+  const resetPasswordMutation = useMutation({
+    mutationFn: async (data: ResetPasswordData) => {
+      // Validate passwords match
+      if (data.password !== data.confirmPassword) {
+        throw new Error("Passwords don't match");
+      }
+      
+      // Remove confirm password before sending to server
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { confirmPassword, ...resetData } = data;
+      
+      const res = await apiRequest("POST", "/api/reset-password", resetData);
+      return await res.json();
+    },
+    onSuccess: (data) => {
+      toast({
+        title: "Password Updated",
+        description: data.message,
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Password Reset Failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
 
   return (
     <AuthContext.Provider
@@ -133,6 +194,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         loginMutation,
         logoutMutation,
         registerMutation,
+        forgotPasswordMutation,
+        resetPasswordMutation
       }}
     >
       {children}

@@ -23,8 +23,11 @@ export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
+  getUserByResetToken(token: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   updateUser(id: number, user: Partial<InsertUser>): Promise<User | undefined>;
+  setPasswordResetToken(email: string, token: string, expiry: Date): Promise<boolean>;
+  resetPassword(token: string, newPassword: string): Promise<boolean>;
   
   // Category methods
   getCategories(): Promise<Category[]>;
@@ -130,6 +133,58 @@ export class DatabaseStorage implements IStorage {
       .where(eq(users.id, id))
       .returning();
     return updatedUser;
+  }
+  
+  async getUserByResetToken(token: string): Promise<User | undefined> {
+    const [user] = await db
+      .select()
+      .from(users)
+      .where(eq(users.resetToken, token));
+    return user;
+  }
+  
+  async setPasswordResetToken(email: string, token: string, expiry: Date): Promise<boolean> {
+    // Check if user exists
+    const user = await this.getUserByEmail(email);
+    if (!user) {
+      return false;
+    }
+    
+    // Set the reset token and expiry
+    const result = await db
+      .update(users)
+      .set({
+        resetToken: token,
+        resetTokenExpiry: expiry
+      })
+      .where(eq(users.email, email));
+      
+    return result.rowCount !== null && result.rowCount > 0;
+  }
+  
+  async resetPassword(token: string, newPassword: string): Promise<boolean> {
+    // Find user by token
+    const user = await this.getUserByResetToken(token);
+    if (!user) {
+      return false;
+    }
+    
+    // Check if token is expired
+    if (user.resetTokenExpiry && new Date(user.resetTokenExpiry) < new Date()) {
+      return false;
+    }
+    
+    // Update password and clear token
+    const result = await db
+      .update(users)
+      .set({
+        password: newPassword,
+        resetToken: null,
+        resetTokenExpiry: null
+      })
+      .where(eq(users.id, user.id));
+      
+    return result.rowCount !== null && result.rowCount > 0;
   }
   
   // Category methods

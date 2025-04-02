@@ -152,7 +152,12 @@ export default function AuthPage() {
                     />
                     
                     <div className="flex justify-end">
-                      <Button variant="link" className="text-sm text-secondary px-0">
+                      <Button 
+                        variant="link" 
+                        className="text-sm text-secondary px-0" 
+                        onClick={() => navigate("/forgot-password")}
+                        type="button"
+                      >
                         Forgot password?
                       </Button>
                     </div>
