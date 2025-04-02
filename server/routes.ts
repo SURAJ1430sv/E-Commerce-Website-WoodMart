@@ -156,6 +156,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Get supplier's products
+  app.get("/api/products/supplier", isAuthenticated, hasRole('supplier'), async (req, res) => {
+    try {
+      const products = await storage.getProducts({ supplierId: req.user!.id });
+      res.json(products);
+    } catch (error) {
+      res.status(500).json({ message: "Error fetching supplier products" });
+    }
+  });
+
   // Search products
   app.get("/api/products/search/:query", async (req, res) => {
     try {

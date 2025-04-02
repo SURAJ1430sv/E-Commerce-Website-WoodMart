@@ -10,6 +10,7 @@ import ProductDetailPage from "@/pages/product-detail-page";
 import CartPage from "@/pages/cart-page";
 import ProfilePage from "@/pages/profile-page";
 import SuppliersPage from "@/pages/suppliers-page";
+import SupplierDashboard from "@/pages/supplier-dashboard";
 import AboutPage from "@/pages/about-page";
 import ContactPage from "@/pages/contact-page";
 import ForgotPasswordPage from "@/pages/forgot-password-page";
@@ -37,6 +38,7 @@ function Router() {
           <Route path="/reset-password" component={ResetPasswordPage} />
           <ProtectedRoute path="/cart" component={CartPage} />
           <ProtectedRoute path="/profile" component={ProfilePage} />
+          <ProtectedRoute path="/supplier/dashboard" component={SupplierDashboard} />
           <Route component={NotFound} />
         </Switch>
       </div>

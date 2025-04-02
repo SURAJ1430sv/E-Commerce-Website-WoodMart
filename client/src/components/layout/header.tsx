@@ -12,7 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ShoppingCart, User, LogOut, Warehouse, Search, Menu, X } from "lucide-react";
+import { ShoppingCart, User, LogOut, Warehouse, Search, Menu, X, PackageOpen } from "lucide-react";
 import CurrencySelector from "@/components/currency/currency-selector";
 
 export default function Header() {
@@ -136,6 +136,14 @@ export default function Header() {
                         <span>Profile</span>
                       </Link>
                     </DropdownMenuItem>
+                    {user.role === 'supplier' && (
+                      <DropdownMenuItem asChild>
+                        <Link href="/supplier/dashboard" className="flex items-center w-full">
+                          <PackageOpen className="mr-2 h-4 w-4" />
+                          <span>Supplier Dashboard</span>
+                        </Link>
+                      </DropdownMenuItem>
+                    )}
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={handleLogout}>
                       <LogOut className="mr-2 h-4 w-4" />
@@ -262,6 +270,15 @@ export default function Header() {
                 >
                   Profile
                 </Link>
+                {user.role === 'supplier' && (
+                  <Link 
+                    href="/supplier/dashboard"
+                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:bg-gray-100"
+                    onClick={closeMobileMenu}
+                  >
+                    Supplier Dashboard
+                  </Link>
+                )}
                 <Link 
                   href="/cart"
                   className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:bg-gray-100"
