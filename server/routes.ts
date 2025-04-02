@@ -73,6 +73,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Get supplier's products (this must come BEFORE the :id route)
+  app.get("/api/products/supplier", isAuthenticated, hasRole('supplier'), async (req, res) => {
+    try {
+      const products = await storage.getProducts({ supplierId: req.user!.id });
+      res.json(products);
+    } catch (error) {
+      res.status(500).json({ message: "Error fetching supplier products" });
+    }
+  });
+  
+  // Search products (this must come BEFORE the :id route)
+  app.get("/api/products/search/:query", async (req, res) => {
+    try {
+      const query = req.params.query;
+      const products = await storage.searchProducts(query);
+      res.json(products);
+    } catch (error) {
+      res.status(500).json({ message: "Error searching products" });
+    }
+  });
+  
   // Get a single product
   app.get("/api/products/:id", async (req, res) => {
     try {
@@ -92,16 +113,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Create a new product (supplier only)
   app.post("/api/products", isAuthenticated, hasRole('supplier'), async (req, res) => {
     try {
-      const productData = insertProductSchema.parse(req.body);
+      console.log('Product creation request received:', req.body);
       
-      // Set supplier ID to current user
-      productData.supplierId = req.user!.id;
+      // Create a complete product object with the supplier ID
+      const productData = {
+        ...req.body,
+        supplierId: req.user!.id
+      };
       
-      const product = await storage.createProduct(productData);
+      console.log('Product data after adding supplierId:', productData);
+      
+      // Validate the data
+      const validatedData = insertProductSchema.parse(productData);
+      
+      console.log('Product data after validation:', validatedData);
+      
+      const product = await storage.createProduct(validatedData);
+      
+      console.log('Product created successfully:', product);
       res.status(201).json(product);
     } catch (error) {
+      console.error('Error creating product:', error);
       if (error instanceof z.ZodError) {
-        return res.status(400).json({ message: "Validation error", errors: error.errors });
+        return res.status(400).json({ 
+          message: "Validation error", 
+          errors: error.errors,
+          details: error.format() 
+        });
       }
       res.status(500).json({ message: "Error creating product" });
     }
@@ -156,26 +194,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  // Get supplier's products
-  app.get("/api/products/supplier", isAuthenticated, hasRole('supplier'), async (req, res) => {
-    try {
-      const products = await storage.getProducts({ supplierId: req.user!.id });
-      res.json(products);
-    } catch (error) {
-      res.status(500).json({ message: "Error fetching supplier products" });
-    }
-  });
 
-  // Search products
-  app.get("/api/products/search/:query", async (req, res) => {
-    try {
-      const query = req.params.query;
-      const products = await storage.searchProducts(query);
-      res.json(products);
-    } catch (error) {
-      res.status(500).json({ message: "Error searching products" });
-    }
-  });
 
   // ======== Cart Routes ========
   // Get user's cart

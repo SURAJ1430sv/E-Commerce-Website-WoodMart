@@ -50,10 +50,12 @@ import { useToast } from "@/hooks/use-toast";
 import { Loader2, PlusCircle } from "lucide-react";
 
 // Product form schema based on the insert product schema
-const productFormSchema = insertProductSchema.extend({
-  price: z.coerce.number().min(1, "Price must be at least 1"),
-  stockQuantity: z.coerce.number().min(1, "Stock quantity must be at least 1"),
-});
+const productFormSchema = insertProductSchema
+  .extend({
+    price: z.coerce.number().min(1, "Price must be at least 1"),
+    stockQuantity: z.coerce.number().min(1, "Stock quantity must be at least 1"),
+  })
+  .omit({ supplierId: true }); // We'll add supplierId in the API call
 
 type ProductFormValues = z.infer<typeof productFormSchema>;
 
@@ -91,9 +93,9 @@ export default function SupplierDashboard() {
       price: 0,
       imageUrl: "",
       stockQuantity: 1,
-      categoryId: undefined,
+      categoryId: 1, // Default to first category
       isFeatured: false,
-    } as ProductFormValues,
+    },
   });
 
   // Add product mutation
@@ -117,10 +119,11 @@ export default function SupplierDashboard() {
       queryClient.invalidateQueries({ queryKey: ["/api/products/supplier"] });
       queryClient.invalidateQueries({ queryKey: ["/api/products"] });
     },
-    onError: (error: Error) => {
+    onError: (error: any) => {
+      console.error('Product submission error:', error);
       toast({
-        title: "Error",
-        description: error.message,
+        title: "Error adding product",
+        description: error.message || "Unknown error occurred",
         variant: "destructive",
       });
     },
