@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { apiRequest, queryClient } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
+import Price from '@/components/currency/price';
 
 interface CartItemProps {
   item: {
@@ -80,10 +81,9 @@ export default function CartItem({ item }: CartItemProps) {
     removeCartMutation.mutate(item.id);
   };
 
-  // Format price from cents to dollars
-  const formatPrice = (cents: number) => {
-    return `$${(cents / 100).toFixed(2)}`;
-  };
+  // Convert prices from cents to dollars
+  const itemPriceInDollars = item.product.price / 100;
+  const totalPriceInDollars = (item.product.price * quantity) / 100;
 
   return (
     <div className="py-4">
@@ -106,7 +106,7 @@ export default function CartItem({ item }: CartItemProps) {
           </Link>
           <div className="flex items-center mt-1">
             <span className="text-primary-dark font-semibold">
-              {formatPrice(item.product.price)}
+              <Price amount={itemPriceInDollars} />
             </span>
           </div>
           
@@ -158,7 +158,7 @@ export default function CartItem({ item }: CartItemProps) {
         
         <div className="text-right">
           <span className="font-semibold text-gray-800">
-            {formatPrice(item.product.price * quantity)}
+            <Price amount={totalPriceInDollars} />
           </span>
           
           {item.product.stockQuantity < 10 && (

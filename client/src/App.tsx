@@ -18,6 +18,7 @@ import { ProtectedRoute } from "./lib/protected-route";
 import Header from "./components/layout/header";
 import Footer from "./components/layout/footer";
 import { AuthProvider } from "./hooks/use-auth";
+import { CurrencyPreferenceProvider } from "./hooks/use-currency-preference";
 
 function Router() {
   return (
@@ -48,8 +49,10 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <Router />
-        <Toaster />
+        <CurrencyPreferenceProvider>
+          <Router />
+          <Toaster />
+        </CurrencyPreferenceProvider>
       </AuthProvider>
     </QueryClientProvider>
   );

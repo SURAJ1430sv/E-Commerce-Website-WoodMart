@@ -7,6 +7,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/use-auth';
 import { apiRequest, queryClient } from '@/lib/queryClient';
 import { Product } from '@shared/schema';
+import Price from '@/components/currency/price';
 
 interface ProductCardProps {
   product: Product;
@@ -58,10 +59,8 @@ export default function ProductCard({ product }: ProductCardProps) {
     });
   };
 
-  // Format price from cents to dollars
-  const formatPrice = (price: number) => {
-    return `$${(price / 100).toFixed(2)}`;
-  };
+  // Convert price from cents to dollars
+  const priceInDollars = product.price / 100;
 
   return (
     <div 
@@ -96,7 +95,9 @@ export default function ProductCard({ product }: ProductCardProps) {
         <Link href={`/products/${product.id}`} className="block">
           <div className="flex justify-between items-start">
             <h3 className="font-semibold text-lg mb-1 text-gray-800 line-clamp-1">{product.name}</h3>
-            <span className="text-primary-dark font-bold">{formatPrice(product.price)}</span>
+            <span className="text-primary-dark font-bold">
+              <Price amount={priceInDollars} />
+            </span>
           </div>
 
           <p className="text-gray-600 text-sm mb-3 line-clamp-2">{product.description}</p>

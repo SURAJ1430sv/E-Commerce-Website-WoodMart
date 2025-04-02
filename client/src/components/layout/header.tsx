@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ShoppingCart, User, LogOut, Warehouse, Search, Menu, X } from "lucide-react";
+import CurrencySelector from "@/components/currency/currency-selector";
 
 export default function Header() {
   const { user, logoutMutation } = useAuth();
@@ -71,6 +72,9 @@ export default function Header() {
           </div>
           
           <div className="flex items-center">
+            <div className="hidden md:block mr-4">
+              <CurrencySelector />
+            </div>
             <form 
               onSubmit={handleSearchSubmit}
               className="hidden md:flex items-center border-2 border-gray-200 rounded-lg overflow-hidden w-64"
@@ -157,8 +161,12 @@ export default function Header() {
         </div>
       </div>
       
-      {/* Mobile search (shown on small screens) */}
+      {/* Mobile search and currency (shown on small screens) */}
       <div className="md:hidden px-4 py-3 bg-white shadow-sm">
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-sm font-medium text-gray-600">Currency:</span>
+          <CurrencySelector />
+        </div>
         <form 
           onSubmit={handleSearchSubmit}
           className="flex border-2 border-gray-200 rounded-lg overflow-hidden"
