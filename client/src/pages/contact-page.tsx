@@ -157,28 +157,28 @@ export default function ContactPage() {
                   <MapPin className="h-5 w-5 text-primary mt-0.5 mr-3 flex-shrink-0" />
                   <div>
                     <h3 className="font-medium">Address</h3>
-                    <p className="text-gray-600">123 Wood Lane, Timber City, TC 12345</p>
+                    <p className="text-gray-600"> Plot No. 123, Ghatkopar,Mumbai,Maharashtra, India</p>
                   </div>
                 </div>
                 <div className="flex">
                   <Phone className="h-5 w-5 text-primary mt-0.5 mr-3 flex-shrink-0" />
                   <div>
                     <h3 className="font-medium">Phone</h3>
-                    <p className="text-gray-600">(555) 123-4567</p>
+                    <p className="text-gray-600">(+91) 9876543210</p>
                   </div>
                 </div>
                 <div className="flex">
                   <Mail className="h-5 w-5 text-primary mt-0.5 mr-3 flex-shrink-0" />
                   <div>
                     <h3 className="font-medium">Email</h3>
-                    <p className="text-gray-600">info@woodmarket.com</p>
+                    <p className="text-gray-600">info@rest-express.com</p>
                   </div>
                 </div>
                 <div className="flex">
                   <Clock className="h-5 w-5 text-primary mt-0.5 mr-3 flex-shrink-0" />
                   <div>
                     <h3 className="font-medium">Hours</h3>
-                    <p className="text-gray-600">Monday-Friday: 9AM-5PM</p>
+                    <p className="text-gray-600">Monday-Saturday: 9AM-5PM</p>
                     <p className="text-gray-600">Saturday: 10AM-2PM</p>
                     <p className="text-gray-600">Sunday: Closed</p>
                   </div>
@@ -206,13 +206,13 @@ export default function ContactPage() {
 
       <div className="rounded-lg overflow-hidden h-96 mb-12">
         <iframe 
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.0508841397245!2d-122.4194!3d37.7749!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80859a6d00690021%3A0x4a501367f076adff!2sSan%20Francisco%2C%20CA!5e0!3m2!1sen!2sus!4v1640187425767!5m2!1sen!2sus" 
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d30210.0!2d72.88261!3d19.07283!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c63e3b9d6ed5%3A0x0!2sMumbai%2C%20Maharashtra%2C%20India!5e0!3m2!1sen!2sin!4v0000000000000"
           width="100%" 
           height="100%" 
           style={{ border: 0 }} 
           allowFullScreen 
-          loading="lazy"
-          title="WoodMarket Location"
+          loading="lazy"  
+          title="Rest Express Location"
         ></iframe>
       </div>
     </main>

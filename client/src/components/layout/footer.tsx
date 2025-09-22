@@ -107,19 +107,19 @@ export default function Footer() {
             <ul className="space-y-2">
               <li className="flex items-start">
                 <MapPin className="h-5 w-5 text-amber-400 mt-0.5 mr-2 flex-shrink-0" />
-                <span className="text-gray-400">123 Wood Lane, Timber City, TC 12345</span>
+                <span className="text-gray-400">Plot No. 123, Ghatkopar,Mumbai,Maharashtra, India</span>
               </li>
               <li className="flex items-center">
                 <Phone className="h-5 w-5 text-amber-400 mr-2 flex-shrink-0" />
-                <span className="text-gray-400">(555) 123-4567</span>
+                <span className="text-gray-400">(+91) 9876543210</span>
               </li>
               <li className="flex items-center">
                 <Mail className="h-5 w-5 text-amber-400 mr-2 flex-shrink-0" />
-                <span className="text-gray-400">info@woodmarket.com</span>
+                <span className="text-gray-400">info@rest-express.com</span>
               </li>
               <li className="flex items-center">
                 <Clock className="h-5 w-5 text-amber-400 mr-2 flex-shrink-0" />
-                <span className="text-gray-400">Mon-Fri: 9AM-5PM</span>
+                <span className="text-gray-400">Mon-Sat: 9AM-5PM</span>
               </li>
             </ul>
           </div>

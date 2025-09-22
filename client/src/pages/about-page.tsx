@@ -92,22 +92,22 @@ export default function AboutPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
             {
-              name: "Sarah Johnson",
-              title: "Founder & CEO",
+              name: "Khushi Yadav",
+              title: "COO",
               image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
             },
             {
-              name: "Michael Chen",
-              title: "COO",
+              name: "Suraj Vishwakarma",
+              title: "Founder & CEO",
               image: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
             },
             {
-              name: "Elena Rodriguez",
+              name: "Shreya Singh",
               title: "Head of Supplier Relations",
               image: "https://images.unsplash.com/photo-1598550880863-4e8aa3d0edb4?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
             },
             {
-              name: "David Wilson",
+              name: "Priyanshu Dubey",
               title: "Lead Developer",
               image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
             }
