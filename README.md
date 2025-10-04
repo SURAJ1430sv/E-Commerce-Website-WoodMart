@@ -39,7 +39,6 @@ Interior Designers / Contractors – Professionals who frequently source plywood
 * * <img width="1419" height="771" alt="image" src="https://github.com/user-attachments/assets/baa30dea-93ba-4a41-8f06-9ec352b50bfe" />
 * **Responsive Design:** Looks and works great on desktops, tablets, and mobile phones.
 <img width="1820" height="453" alt="image" src="https://github.com/user-attachments/assets/f86ffb43-8b74-45ce-8597-c06303adadd9" />
-* <img width="1419" height="771" alt="image" src="https://github.com/user-attachments/assets/baa30dea-93ba-4a41-8f06-9ec352b50bfe" />
 
 
 ## 🛠️ Tech Stack
