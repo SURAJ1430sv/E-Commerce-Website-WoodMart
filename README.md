@@ -1,4 +1,4 @@
-<img width="1412" height="831" alt="image" src="https://github.com/user-attachments/assets/4df85eed-cf40-4d18-a4ac-7e41c12813dd" /># E-Commerce Website - WoodMart 🛍️
+# E-Commerce Website - WoodMart 🛍️
 
 WoodMart – A modern e-commerce platform for buying and selling plywood and related products with user-friendly interface and secure payment integration. A full-featured e-commerce platform built with the MERN stack, offering a seamless shopping experience for wooden furniture and decor."
 
@@ -28,17 +28,18 @@ Interior Designers / Contractors – Professionals who frequently source plywood
 ## ✨ Key Features
 
 * **User Authentication:** Secure login and registration for users.
-* <img width="1412" height="831" alt="image" src="https://github.com/user-attachments/assets/6970ee63-848a-41a0-8881-32e65b03b5d8" />
-* **Product Catalog:** Browse products with search, sort, and filter functionality.
-* <img width="917" height="628" alt="image" src="https://github.com/user-attachments/assets/6d66a0a2-d369-4a16-aa77-376bf6a086bb" />
+* * **Product Catalog:** Browse products with search, sort, and filter functionality.
 * **Shopping Cart:** Add, remove, and update product quantities.
-*  <img width="1453" height="852" alt="image" src="https://github.com/user-attachments/assets/7c024ddd-52e9-42ce-b878-f9ff6e1cb3de" />
 * **Checkout Process:** A seamless and secure payment and shipping process.
-* <img width="1428" height="876" alt="image" src="https://github.com/user-attachments/assets/9bdc418e-60e2-4467-aad4-865333c4284f" />
 * **Admin Dashboard:** [If you have one, describe what admins can do, e.g., manage products, orders, and users.]
-* * <img width="1419" height="771" alt="image" src="https://github.com/user-attachments/assets/baa30dea-93ba-4a41-8f06-9ec352b50bfe" />
-* **Responsive Design:** Looks and works great on desktops, tablets, and mobile phones.
-<img width="1820" height="453" alt="image" src="https://github.com/user-attachments/assets/f86ffb43-8b74-45ce-8597-c06303adadd9" />
+* * **Responsive Design:** Looks and works great on desktops, tablets, and mobile phones.
+
+* <img width="1412" height="831" alt="image" src="https://github.com/user-attachments/assets/6970ee63-848a-41a0-8881-32e65b03b5d8" />
+* <img width="917" height="628" alt="image" src="https://github.com/user-attachments/assets/6d66a0a2-d369-4a16-aa77-376bf6a086bb" />
+* <img width="1453" height="852" alt="image" src="https://github.com/user-attachments/assets/7c024ddd-52e9-42ce-b878-f9ff6e1cb3de" />
+* <img width="1428" height="876" alt="image" src="https://github.com/user-attachments/assets/9bdc418e-60e2-4467-aad4-865333c4284f" />
+* <img width="1419" height="771" alt="image" src="https://github.com/user-attachments/assets/baa30dea-93ba-4a41-8f06-9ec352b50bfe" />
+* <img width="1820" height="453" alt="image" src="https://github.com/user-attachments/assets/f86ffb43-8b74-45ce-8597-c06303adadd9" />
 
 
 ## 🛠️ Tech Stack
